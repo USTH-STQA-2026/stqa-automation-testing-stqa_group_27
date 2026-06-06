@@ -25,40 +25,42 @@ from conftest import (
 
 
 def test_logout(page, test_config):
-    """TC-11: Logout success (*Đăng xuất thành công*)
+    login(page, test_config)
 
-    🔴 NOT COMPLETED (*CHƯA HOÀN THÀNH*)
+    page.locator(
+        'flt-semantics[role="button"]:has-text("Đăng xuất")'
+    ).first.click()
 
-    Description (*Mô tả*):
-        Log in → click Logout → verify page returns to login screen.
-        (*Đăng nhập → click Đăng xuất → kiểm tra quay về trang đăng nhập.*)
+    page.wait_for_timeout(3000)
+    enable_flutter_semantics(page)
 
-    Suggested steps (*Gợi ý*):
-        1. login(page, test_config)
-        2. Find "Đăng xuất" button and click (*Tìm nút "Đăng xuất" và click*)
-        3. Wait 3s, re-enable semantics (*Đợi 3s, bật lại semantics*)
-        4. Assert: "Đăng nhập" button or Email input exists
-           (*Assert: có nút "Đăng nhập" hoặc ô input Email*)
-    """
-    # TODO: Students implement here (Sinh viên viết code ở đây)
-    pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    has_login_btn = page.locator(
+        'flt-semantics[role="button"]:has-text("Đăng nhập")'
+    ).count() > 0
+
+    has_email_input = page.locator(
+        'input[aria-label="Email"]'
+    ).count() > 0
+
+    assert has_login_btn or has_email_input
 
 
 def test_switch_language_to_english(page, test_config):
-    """TC-12: Switch language to English (*Chuyển ngôn ngữ sang tiếng Anh*)
+    login(page, test_config)
 
-    🔴 NOT COMPLETED (*CHƯA HOÀN THÀNH*)
+    page.locator(
+        'flt-semantics[role="button"]:has-text("EN")'
+    ).first.click()
 
-    Description (*Mô tả*):
-        Log in → click "EN" button → verify UI switches to English.
-        (*Đăng nhập → click nút "EN" → kiểm tra giao diện chuyển sang tiếng Anh.*)
+    page.wait_for_timeout(2000)
+    enable_flutter_semantics(page)
 
-    Suggested steps (*Gợi ý*):
-        1. login(page, test_config)
-        2. Find "EN" button and click (*Tìm nút "EN" và click*)
-        3. Wait 2s, re-enable semantics (*Đợi 2s, bật lại semantics*)
-        4. Get sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
-        5. Assert: "Logout" or "Borrow" or "Library" in sem_text
-    """
-    # TODO: Students implement here (Sinh viên viết code ở đây)
-    pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    sem_text = " ".join(
+        page.locator("flt-semantics").all_text_contents()
+    )
+
+    assert (
+        "Logout" in sem_text
+        or "Borrow" in sem_text
+        or "Library" in sem_text
+    )
