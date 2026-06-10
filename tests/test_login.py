@@ -55,18 +55,19 @@ def test_login_fail_wrong_password(page, test_config):
 
     flutter_fill(page, "Email", test_config["email"])
     flutter_fill(page, "Mật khẩu", "wrongpassword")
+
     flutter_click_button(page, "Đăng nhập")
 
-    page.wait_for_timeout(3000)
+    page.wait_for_timeout(2000)
 
-    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
+    sem_text = " ".join(
+        page.locator("flt-semantics").all_text_contents()
+    )
 
-    has_login_btn = "Đăng nhập" in sem_text
-    has_logout_btn = "Đăng xuất" in sem_text
-
-    assert test_config["display_name"] in sem_text
-    assert "Đăng xuất" in sem_text
-    assert "Đăng nhập" not in sem_text
+    assert "Mật khẩu không đúng" in sem_text
+    assert "Đăng nhập" in sem_text
+    assert test_config["display_name"] not in sem_text
+    assert "Đăng xuất" not in sem_text
 
 
 def test_login_fail_empty_fields(page, test_config):
