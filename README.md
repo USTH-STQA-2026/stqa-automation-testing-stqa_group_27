@@ -1,3 +1,4 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/ZpUiBug-)
 # STQA Library Automation — Starter Template
 
 Bài tập thực hành **Kiểm thử Web UI tự động** cho môn **Kiểm thử và Đảm bảo chất lượng phần mềm (STQA)**.
@@ -14,18 +15,19 @@ Sử dụng **Playwright + Python** để kiểm thử hệ thống Mượn sác
 
 > **⚠️ Sinh viên: Điền thông tin nhóm vào bảng dưới đây trước khi nộp bài.**
 
-|              | Thông tin                    |
-| ------------ | ---------------------------- |
-| **Tên nhóm** | `<!-- VD: Nhóm 1 -->`        |
-| **Lớp**      | `<!-- VD: SE001.P11 -->`     |
-| **Học kỳ**   | `<!-- VD: HK2 2025-2026 -->` |
+| | Thông tin |
+|---|---|
+| **Tên nhóm** | `Nhóm 27` |
+| **Lớp** | `ICT Class 1` |
+| **Học kỳ** | `HK2 2025-2026` |
 
-| #   | MSSV | Họ và tên | Vai trò     |
-| --- | ---- | --------- | ----------- |
-| 1   |      |           | Nhóm trưởng |
-| 2   |      |           | Thành viên  |
-| 3   |      |           | Thành viên  |
-| 4   |      |           | Thành viên  |
+| # | MSSV | Họ và tên | Vai trò |
+|---|------|-----------|---------|
+| 1 |23BA14006|Nguyễn Thế Anh| Leader |
+| 2 |22BA13306|Nguyễn Ngọc Trung| Member |
+| 3 |23BA14313|Đỗ Thanh Tùng| Member |
+| 4 |23BA14228|Dương Đình Phong| Member |
+| 5 |23BA14143|Ngô Hải Huyền| Member |
 
 ---
 

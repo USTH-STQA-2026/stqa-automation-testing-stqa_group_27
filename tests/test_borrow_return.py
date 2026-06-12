@@ -1,91 +1,139 @@
-"""
-Borrow & Return Tests (*Kiểm thử Mượn & Trả sách*) — Library Book Borrowing System (*Hệ thống Mượn sách thư viện*)
-
-Students must complete ALL 3 test cases in this file.
-(*Sinh viên cần hoàn thành TẤT CẢ 3 test case trong file này.*)
-
-Hints (*Gợi ý*):
-    - Use login() helper to log in (*Dùng login() helper để đăng nhập*)
-    - "Mượn / Trả" tab: role="tab", aria-label="Mượn / Trả"
-    - Available books have "Có sẵn" in aria-label, borrowed books have "Đang mượn"
-      (*Sách "Có sẵn" có aria-label chứa "Có sẵn", sách "Đang mượn" chứa "Đang mượn"*)
-    - Borrow button: 'flt-semantics[role="button"]:has-text("Mượn sách này")'
-      (*Nút mượn*)
-    - After clicking "Mượn sách này", a confirmation dialog appears — click "Mượn" again
-      (*Sau khi click "Mượn sách này" sẽ hiện dialog xác nhận — cần click nút "Mượn" lần nữa*)
-    - Return button: 'flt-semantics[role="button"]:has-text("Trả sách")'
-      (*Nút trả*)
-"""
-import os
-import time
 import pytest
-from conftest import (
-    enable_flutter_semantics, flutter_fill, flutter_click_button,
-    login, SCREENSHOT_DIR,
-)
+from conftest import login, enable_flutter_semantics
 
 
-def test_borrow_book(page, test_config):
-    """TC-08: Borrow an available book (*Mượn sách có trạng thái 'Có sẵn'*)
+# =========================
+# TC-08: Borrow limit (REQ-04)
+# MAX 3 books per member
+# =========================
+def test_borrow_book_limit(page, test_config):
+    login(page, test_config)
+    enable_flutter_semantics(page)
 
-    🔴 NOT COMPLETED (*CHƯA HOÀN THÀNH*)
+    page.wait_for_timeout(2000)
 
-    Description (*Mô tả*):
-        Log in → find an "Available" book → click "Mượn sách này" → confirm dialog
-        → verify book status changes to "Borrowed".
-        (*Đăng nhập → tìm sách "Có sẵn" → click "Mượn sách này" → xác nhận dialog
-        → kiểm tra sách chuyển sang trạng thái "Đang mượn".*)
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
 
-    Suggested steps (*Gợi ý các bước*):
-        1. login(page, test_config)
-        2. Find available book: page.locator('flt-semantics[role="group"][aria-label*="Có sẵn"]')
-           (*Tìm sách Có sẵn*)
-        3. Click "Mượn sách này" button inside that book card
-           (*Click nút "Mượn sách này" trong sách đó*)
-        4. Wait for confirmation dialog, re-enable semantics
-           (*Đợi dialog xác nhận, bật lại semantics*)
-        5. Click "Mượn" button (confirm button in dialog)
-           (*Click nút "Mượn" — nút xác nhận trong dialog*)
-        6. Assert: "Đang mượn" or "thành công" appears
-           (*Assert: "Đang mượn" hoặc "thành công" xuất hiện*)
-    """
-    # TODO: Students implement here (Sinh viên viết code ở đây)
-    pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    borrowed_books = sem_text.count("Đang mượn")
+
+    borrow_buttons = page.locator(
+        'flt-semantics[role="button"]:has-text("Mượn sách này")'
+    ).count()
+
+    # RULE 1: cannot exceed 3 books
+    if borrowed_books > 3:
+        pytest.fail(
+            "BUG FOUND: Member is allowed to borrow more than 3 books (REQ-04 violation)."
+        )
+
+    # RULE 2: must block borrowing at limit
+    if borrowed_books >= 3 and borrow_buttons > 0:
+        pytest.fail(
+            "BUG FOUND: Borrow limit reached (3 books) but system still allows borrowing."
+        )
 
 
+# =========================
+# TC-09: View borrowed books (REQ-04)
+# =========================
 def test_view_borrowed_books(page, test_config):
-    """TC-09: View borrowed books list (*Xem danh sách sách đang mượn — tab Mượn / Trả*)
+    login(page, test_config)
+    enable_flutter_semantics(page)
 
-    🔴 NOT COMPLETED (*CHƯA HOÀN THÀNH*)
+    page.wait_for_timeout(2000)
 
-    Description (*Mô tả*):
-        Log in → switch to "Mượn / Trả" tab → verify borrowed books are shown.
-        (*Đăng nhập → chuyển sang tab "Mượn / Trả" → kiểm tra có sách đang mượn.*)
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
 
-    Hints (*Gợi ý*):
-        - Click tab: page.locator('flt-semantics[role="tab"][aria-label="Mượn / Trả"]')
-        - Verify: books with "Đang mượn" in aria-label, or "Trả sách" button exists
-          (*Kiểm tra: có sách với aria-label chứa "Đang mượn" hoặc có nút "Trả sách"*)
-    """
-    # TODO: Students implement here (Sinh viên viết code ở đây)
-    pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    if "Đang mượn" not in sem_text:
+        pytest.fail(
+            "BUG FOUND: Borrowed books are not displayed for current user (REQ-04 violation)."
+        )
+
+    if not any(x in sem_text for x in ["Mã:", "BOOK"]):
+        pytest.fail(
+            "BUG FOUND: Borrowed book metadata is missing (REQ-04 violation)."
+        )
 
 
+# =========================
+# TC-10: Return book (REQ-05)
+# =========================
 def test_return_book(page, test_config):
-    """TC-10: Return a borrowed book (*Trả sách đang mượn*)
+    login(page, test_config)
+    enable_flutter_semantics(page)
 
-    🔴 NOT COMPLETED (*CHƯA HOÀN THÀNH*)
+    page.wait_for_timeout(2000)
 
-    Description (*Mô tả*):
-        Log in → go to "Mượn / Trả" tab → click "Trả sách" → verify book is returned.
-        (*Đăng nhập → tab "Mượn / Trả" → click "Trả sách" → kiểm tra sách được trả.*)
+    sem_before = " ".join(page.locator("flt-semantics").all_text_contents())
 
-    Hints (*Gợi ý*):
-        - Switch to "Mượn / Trả" tab (*Chuyển tab "Mượn / Trả"*)
-        - Find return button: page.locator('flt-semantics[role="button"]:has-text("Trả sách")')
-          (*Tìm nút "Trả sách"*)
-        - Click and verify status change or success message
-          (*Click và kiểm tra sách chuyển trạng thái hoặc có thông báo thành công*)
-    """
-    # TODO: Students implement here (Sinh viên viết code ở đây)
-    pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    return_buttons = page.locator(
+        'flt-semantics:has-text("Trả sách")'
+    )
+
+    if return_buttons.count() == 0:
+        pytest.fail(
+            "BUG FOUND: No return button found although user has borrowed books (REQ-05 violation)."
+        )
+
+    return_buttons.first.click()
+
+    page.wait_for_timeout(2000)
+
+    sem_after = " ".join(page.locator("flt-semantics").all_text_contents())
+
+    # RULE: book must be removed from borrowed state
+    if sem_before == sem_after:
+        pytest.fail(
+            "BUG FOUND: Returning book does not update system state (REQ-05 violation)."
+        )
+
+    # optional stronger check
+    if "Đang mượn" in sem_after and "Có sẵn" not in sem_after:
+        pytest.fail(
+            "BUG FOUND: Returned book does not change status to 'Có sẵn' (REQ-05 violation)."
+        )
+
+
+# =========================
+# TC-19: Overdue handling (REQ-06)
+# =========================
+def test_return_overdue_book_warning(page, test_config):
+    login(page, test_config)
+    enable_flutter_semantics(page)
+
+    page.wait_for_timeout(2000)
+
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
+
+    has_overdue = any(
+        x in sem_text.lower()
+        for x in ["quá hạn", "overdue"]
+    )
+
+    if not has_overdue:
+        pytest.skip("SKIP: No overdue book available in current dataset (REQ-06).")
+
+    return_buttons = page.locator(
+        'flt-semantics:has-text("Trả sách")'
+    )
+
+    if return_buttons.count() == 0:
+        pytest.fail(
+            "BUG FOUND: Overdue book exists but cannot be returned (REQ-06 violation)."
+        )
+
+    return_buttons.first.click()
+
+    page.wait_for_timeout(2000)
+
+    sem_after = " ".join(page.locator("flt-semantics").all_text_contents())
+
+    has_warning = any(
+        x in sem_after.lower()
+        for x in ["quá hạn", "overdue", "phạt", "penalty"]
+    )
+
+    if not has_warning:
+        pytest.fail(
+            "BUG FOUND: Overdue return does not trigger warning or penalty (REQ-06 violation)."
+        )
